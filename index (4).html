@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enter Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+    .container {
+      background-color: #fff;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      max-height: 95vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .step-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .step {
+      background-color: #ccc;
+      color: #000;
+      padding: 10px 18px;
+      font-weight: bold;
+      font-size: 0.9em;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+    }
+    .step:last-child {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .step.active {
+      background-color: #003366;
+      color: white;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="submit"],
+    a.btn {
+      font-family: inherit;
+      font-size: 1em;
+    }
+    input[type="text"], input[type="date"] {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    .required::after {
+      content: " *";
+      color: red;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .active { background-color: #4CAF50; color: white; }
+    .inactive { background-color: #f44336; color: white; }
+    .not-found { background-color: #FF9800; color: black; }
+    .multiple-members { background-color: #FFFF00; color: black; }
+    .other { background-color: #FFC107; color: red; }
+    .top-left-logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      height: 50px;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      gap: 10px;
+    }
+    .step-three {
+      display: none;
+      margin-top: 25px;
+      padding-top: 10px;
+      border-top: 2px solid #ccc;
+    }
+    .step-three h3 {
+      color: #003366;
+      margin-bottom: 10px;
+    }
+    /* Disabled link style */
+    a.disabled {
+      pointer-events: none;
+      background-color: #ccc !important;
+      color: #666 !important;
+      cursor: not-allowed;
+    }
+    /* Style for link buttons */
+    a.btn {
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 4px;
+      background-color: #4CAF50;
+      color: white;
+      width: 100%;
+    }
+    a.btn:hover:not(.disabled) {
+      background-color: #45a049;
+    }
+    #cancelBtn {
+      background-color: #f44336;
+      color: white;
+      padding: 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    #cancelBtn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <img src="header_active-fit.png" alt="Top Left Logo" class="top-left-logo" />
+  <div class="container">
+    <div class="step-container">
+      <div class="step">Step 1</div>
+      <div class="step active" id="step2">Step 2</div>
+      <div class="step" id="step3">Step 3</div>
+    </div>
+
+    <h2 style="color: #003366; font-weight: bold;">Personal Information</h2>
+    <p style="color: #666;">
+      Please enter below information to verify your FBHP member eligibility.
+    </p>
+
+    <form id="dataForm">
+      <label>Subscriber ID (optional)</label>
+      <input type="text" id="subscriberId" minlength="9" maxlength="12"><br>
+      <label class="required">First Name</label>
+      <input type="text" id="firstName" required minlength="3"><br>
+      <label class="required">Last Name</label>
+      <input type="text" id="lastName" required minlength="3"><br>
+      <label class="required">Date Of Birth</label>
+      <input type="date" id="dob" required><br>
+      <input type="submit" value="Submit">
+    </form>
+
+    <div id="stepThree" class="step-three">
+      <h3>Active & Fit Member Validation</h3>
+      <div id="statusMessage" class="status" style="display: none;"></div>
+      <div class="button-group">
+        <button id="cancelBtn" type="button">Cancel</button>
+        <a class="btn disabled" id="continueBtn"
+           href="https://www.activeandfitdirect.com/fitness/AF792146FA"
+           target="_blank">
+          Continue
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("dataForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const subscriberId = document.getElementById("subscriberId").value;
+      const firstName = document.getElementById("firstName").value;
+      const lastName = document.getElementById("lastName").value;
+      const dobInput = document.getElementById("dob").value;
+
+      let dob = "";
+      if (dobInput) {
+        const dobParts = dobInput.split("-");
+        if (dobParts.length === 3) {
+          dob = `${dobParts[1]}/${dobParts[2]}/${dobParts[0]}`;
+        }
+      }
+
+      const apiUrl = `https://api-np.fbhp.com/fbhpweb-member-facets-eapi-uat/api/member/status?subscriberId=${subscriberId}&fname=${firstName}&lname=${lastName}&dob=${dob}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Network error");
+
+        const data = await response.json();
+        console.log("API Response:", data);
+
+        const eligibilityStatus = data?.payload?.[0]?.eligibilityStatus || "Unavailable";
+
+        const stepThree = document.getElementById("stepThree");
+        const statusDiv = document.getElementById("statusMessage");
+        const continueBtn = document.getElementById("continueBtn");
+
+        stepThree.style.display = "block";
+        stepThree.scrollIntoView({ behavior: "smooth" });
+
+        document.getElementById("step2").classList.remove("active");
+        document.getElementById("step3").classList.add("active");
+
+        statusDiv.style.display = "block";
+        statusDiv.textContent = `Eligibility Status: ${eligibilityStatus}`;
+        statusDiv.className = "status";
+
+        continueBtn.classList.add("disabled"); // default disabled
+
+        if (eligibilityStatus === "Active") {
+          statusDiv.classList.add("active");
+          statusDiv.innerHTML = `<strong>🎉 Congratulations!</strong><br>You are Eligible for the Active&amp;Fit Direct program.<br>Please click the Continue button to transfer to the Active&amp;Fit Direct Site for registration.`;
+          continueBtn.classList.remove("disabled"); // enable link
+        } else if (eligibilityStatus === "Inactive") {
+          statusDiv.classList.add("inactive");
+        } else if (eligibilityStatus === "Member not found") {
+          statusDiv.classList.add("not-found");
+        } else if (eligibilityStatus.includes("Multiple members")) {
+          statusDiv.classList.add("multiple-members");
+        } else {
+          statusDiv.classList.add("other");
+        }
+            } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again.");
+
+        const stepThree = document.getElementById("stepThree");
+        stepThree.style.display = "block";
+        stepThree.scrollIntoView({ behavior: "smooth" });
+
+        document.getElementById("step2").classList.remove("active");
+        document.getElementById("step3").classList.add("active");
+
+        const statusDiv = document.getElementById("statusMessage");
+        statusDiv.textContent = "Unable to retrieve eligibility.";
+        statusDiv.className = "status other";
+        statusDiv.style.display = "block";
+
+        const continueBtn = document.getElementById("continueBtn");
+        continueBtn.classList.add("disabled"); // keep disabled on error
+      }
+    });
+
+    document.getElementById("cancelBtn").addEventListener("click", () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>

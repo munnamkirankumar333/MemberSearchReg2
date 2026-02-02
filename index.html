@@ -188,13 +188,6 @@
   (function () {
     const el = document.getElementById('subscriberId');
 
-    // Keep only digits and clear any previous custom message while typing
-    el.addEventListener('input', function () {
-      const digitsOnly = this.value.replace(/\D+/g, '');
-      if (this.value !== digitsOnly) this.value = digitsOnly;
-      this.setCustomValidity('');
-    });
-
     // Show the requested custom message when length is not 9 or 12
     el.addEventListener('invalid', function () {
       const v = this.value.trim();

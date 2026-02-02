@@ -220,7 +220,7 @@
       const firstName = document.getElementById("firstName").value;
       const lastName = document.getElementById("lastName").value;
       const dobInput = document.getElementById("dob").value;
-      const subscriberId="";
+      let subscriberId="";
       if (input.startsWith('247') && input.length === 12) {
       let result = input.slice(-9); // Takes the last 9 digits
       //alert("Last 9 digits: " + result);

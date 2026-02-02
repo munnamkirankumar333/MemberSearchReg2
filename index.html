@@ -214,17 +214,22 @@
 
       let input = document.getElementById('subscriberId').value;
       // Validates if it starts with 247 and is 12 digits long
-      if (input.startsWith('247') && input.length === 12) {
-      let result = input.slice(-9); // Takes the last 9 digits
-      //alert("Last 9 digits: " + result);
-      document.getElementById("subscriberId").value =result;
-      }
       
-      const subscriberId = document.getElementById("subscriberId").value;
+      
+      //const subscriberId = document.getElementById("subscriberId").value;
       const firstName = document.getElementById("firstName").value;
       const lastName = document.getElementById("lastName").value;
       const dobInput = document.getElementById("dob").value;
-
+      const subscriberId="";
+      if (input.startsWith('247') && input.length === 12) {
+      let result = input.slice(-9); // Takes the last 9 digits
+      //alert("Last 9 digits: " + result);
+      subscriberId = result;
+      }
+      else {
+        
+        subscriberId =input;
+      }
       let dob = "";
       if (dobInput) {
         const dobParts = dobInput.split("-");

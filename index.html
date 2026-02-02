@@ -160,7 +160,7 @@
 
     <form id="dataForm">
       <label>Subscriber ID (optional)</label>
-      <input type="text" id="subscriberId" name="inputField" onclick="processValue()" pattern="^\d{9}|\d{12}$" title="The Subscriber ID length is invalid. Please correct it." required minlength="9" maxlength="12"><br>
+      <input type="text" id="subscriberId" name="inputField" pattern="^\d{9}|\d{12}$" title="The Subscriber ID length is invalid. Please correct it." minlength="9" maxlength="12"><br>
       <label class="required">First Name</label>
       <input type="text" id="firstName" required minlength="3"><br>
       <label class="required">Last Name</label>
@@ -185,23 +185,15 @@
   </div>
   
   <script>
-   function processValue() {
-    let input = document.getElementById('subscriberId').value;
-    // Validates if it starts with 247 and is 12 digits long
-    if (input.startsWith('247') && input.length === 12) {
-    let result = input.slice(-9); // Takes the last 9 digits
-    //alert("Last 9 digits: " + result);
-    document.getElementById("subscriberId").value =result;
-    // alert("Last 9 digits: " + id);
-    } else {
-    //alert("Invalid input. Must be 12 digits starting with 247.");
-  }
-  }
-  </script>
-
-  <script>
     document.getElementById("dataForm").addEventListener("submit", async function (event) {
       event.preventDefault();
+
+      let input = document.getElementById('subscriberId').value;
+      // Validates if it starts with 247 and is 12 digits long
+      if (input.startsWith('247') && input.length === 12) {
+      let result = input.slice(-9); // Takes the last 9 digits
+      //alert("Last 9 digits: " + result);
+      document.getElementById("subscriberId").value =result;
 
       const subscriberId = document.getElementById("subscriberId").value;
       const firstName = document.getElementById("firstName").value;

@@ -160,7 +160,7 @@
 
     <form id="dataForm">
       <label>Subscriber ID (optional)</label>
-      <input type="text" id="subscriberId" name="inputField" pattern="^\d{9}|\d{12}$" minlength="9" maxlength="12"><br>
+      <input  type="text" id="subscriberId" name="subscriberId" inputmode="numeric" autocomplete="off" pattern="^(?:\d{9}|\d{12})$" minlength="9" maxlength="12"><br> 
       <label class="required">First Name</label>
       <input type="text" id="firstName" required minlength="3"><br>
       <label class="required">Last Name</label>
@@ -184,6 +184,37 @@
     </div>
   </div>
   
+<script>
+  (function () {
+    const el = document.getElementById('subscriberId');
+
+    // Keep only digits and clear any previous custom message while typing
+    el.addEventListener('input', function () {
+      const digitsOnly = this.value.replace(/\D+/g, '');
+      if (this.value !== digitsOnly) this.value = digitsOnly;
+      this.setCustomValidity('');
+    });
+
+    // Show the requested custom message when length is not 9 or 12
+    el.addEventListener('invalid', function () {
+      const v = this.value.trim();
+      const is9or12 = /^(?:\d{9}|\d{12})$/.test(v);
+      if (!is9or12) {
+        this.setCustomValidity('The Subscriber ID length is invalid. Please correct it.');
+      } else {
+        this.setCustomValidity('');
+      }
+    });
+
+    // Also validate on blur/submit programmatically
+    el.addEventListener('blur', function () {
+      // Trigger validity UI if needed when leaving the field
+      if (this.value && !this.checkValidity()) {
+        this.reportValidity();
+      }
+    });
+  })();
+</script>
   <script>
     document.getElementById("dataForm").addEventListener("submit", async function (event) {
       event.preventDefault();

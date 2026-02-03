@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -213,7 +214,7 @@
       event.preventDefault();
 
       let input = document.getElementById('subscriberId').value;
-      // Validates if it starts with 247 and is 12 digits long
+      // Validates if it is 12 digits long
       
       
       //const subscriberId = document.getElementById("subscriberId").value;
@@ -221,9 +222,9 @@
       const lastName = document.getElementById("lastName").value;
       const dobInput = document.getElementById("dob").value;
       let subscriberId="";
-      if (input.startsWith('247') && input.length === 12) {
+      if (input.length === 12) {
       let result = input.slice(-9); // Takes the last 9 digits
-      //alert("Last 9 digits: " + result);
+
       subscriberId = result;
       }
       else {
